@@ -1,7 +1,7 @@
 from pydub import AudioSegment
 import moviepy.editor as mpy
 import glob
-import scipy
+# import scipy
 
 # Set location of ffmpeg
 AudioSegment.ffmpeg = "/usr/local/bin/ffmpeg"
@@ -22,19 +22,15 @@ audio_track = mpy.AudioFileClip('merge.mp3')
 
 
 # Look for an image file to use in the video
-artwork = glob.glob("*.jpg")
-if artwork.__len__ > 0:
+artwork = sorted(glob.glob("*.jpg"))
+if len(artwork) > 0:
     # Choose the first image file found in the directory
     picture = mpy.ImageClip(str(artwork[0]))
     # Center the image on black background
     picture = picture.on_color(size=(1280, 720), color=(0,0,0))
-
 else:
     # Create plain black video
-    picture = mpy.ColorClip(size=(1280, 720), color=(0,0,0))
-
-# picture = mpy.ImageClip('cover.jpg')
-# picture = picture.on_color(size=(1280, 720), color=(0,0,0))
+    picture = mpy.ColorClip(size=(1280, 720), col=(0,0,0))
 
 
 picture = picture.set_audio(audio_track)
