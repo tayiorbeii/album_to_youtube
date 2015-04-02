@@ -24,7 +24,6 @@ credentials = os.path.join(home, ".youtube-upload-credentials.json")
 youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
 ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
 
-
 # # Set location of ffmpeg
 # AudioSegment.ffmpeg = "/usr/local/bin/ffmpeg"
 #

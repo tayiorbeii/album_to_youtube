@@ -99,6 +99,7 @@ def upload_video(youtube, options, video_path, total_videos, index):
     video_id = youtube_upload.upload_video.upload(youtube, video_path, body,
         progress_callback=progress.callback, chunksize=16*1024)
     progress.finish()
+    print video_id
     return video_id
 
 def run_main(parser, options, args, output=sys.stdout):
