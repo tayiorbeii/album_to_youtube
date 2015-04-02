@@ -1,8 +1,10 @@
-from pydub import AudioSegment
-import moviepy.editor as mpy
 import glob
+import moviepy.editor as mpy
+import os.path
+import youtube_upload.auth
 import youtube_upload.main as ytup
 # import scipy
+from pydub import AudioSegment
 
 
 class MusicVid(object):
@@ -16,7 +18,11 @@ class MusicVid(object):
         self.file = file
 
 mvid = MusicVid("TestTitle", "This is a test", "Music", "", "unlisted", "=", 'output.mp4')
-ytup.upload_video("client_secret.json", mvid, "output.mp4", 1, 1)
+home = os.path.expanduser("~")
+client_secrets = os.path.join(home, '.client_secrets.json')
+credentials = os.path.join(home, ".youtube-upload-credentials.json")
+youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
+ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
 
 
 # # Set location of ffmpeg
