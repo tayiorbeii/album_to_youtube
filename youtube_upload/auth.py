@@ -15,7 +15,7 @@ def _get_code_from_prompt(authorize_url):
 
 def _get_credentials_interactively(flow, storage, get_code_callback):
     """Return the credentials asking the user."""
-    flow.redirect_uri = oauth2client.client.OOB_CALLBACK_URN
+    flow.redirect_uri = "http://localhost/authorize"
     authorize_url = flow.step1_get_authorize_url()
     code = get_code_callback(authorize_url)
     credential = flow.step2_exchange(code, http=None)
