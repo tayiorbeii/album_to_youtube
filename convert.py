@@ -1,5 +1,7 @@
 import glob
 import moviepy.editor as mpy
+from mutagen.mp3 import MP3
+from mutagen.id3 import ID3
 import os.path
 import youtube_upload.auth
 import youtube_upload.main as ytup
@@ -7,28 +9,43 @@ import youtube_upload.main as ytup
 from pydub import AudioSegment
 
 
-class MusicVid(object):
-    def __init__(self, title, description, category, tags, privacy, location, file):
-        self.title = title
-        self.description = description
-        self.category = category
-        self.tags = tags
-        self.privacy = privacy
-        self.location = location
-        self.file = file
 
-mvid = MusicVid("TestTitle", "This is a test", "Music", "", "unlisted", "=", 'output.mp4')
-home = os.path.expanduser("~")
-client_secrets = os.path.join(home, '.client_secrets.json')
-credentials = os.path.join(home, ".youtube-upload-credentials.json")
-youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
-ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
+# TODO: Convert this from a class to a simple dict
+# class MusicVid(object):
+#     def __init__(self, title, description, category, tags, privacy, location, file):
+#         self.title = title
+#         self.description = description
+#         self.category = category
+#         self.tags = tags
+#         self.privacy = privacy
+#         self.location = location
+#         self.file = file
+
+
+##############
+# This all works:
+
+# mvid = MusicVid("TestTitle", "This is a test", "Music", "", "unlisted", "=", 'output.mp4')
+# home = os.path.expanduser("~")
+# client_secrets = os.path.join(home, '.client_secrets.json')
+# credentials = os.path.join(home, ".youtube-upload-credentials.json")
+# youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
+# ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
+
+##############
+
+# This all works:
 
 # # Set location of ffmpeg
 # AudioSegment.ffmpeg = "/usr/local/bin/ffmpeg"
 #
 # # Search for all mp3 files in directory
-# playlist_songs = [AudioSegment.from_mp3(mp3_file) for mp3_file in glob.glob("*.mp3")]
+list_of_songs = glob.glob("*.mp3")
+for mp3_file in list_of_songs:
+    audio = ID3(mp3_file)
+    print audio['TRCK'].text[0] + " - " + audio['TIT2'].text[0]
+
+playlist_songs = [AudioSegment.from_mp3(mp3_file) for mp3_file in list_of_songs]
 #
 # # Combine all songs into one file
 # combined = AudioSegment.empty()
