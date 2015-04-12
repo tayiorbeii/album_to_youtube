@@ -34,7 +34,7 @@ video_description = ""
 start_time = 0
 
 # # Search for all mp3 files in directory
-list_of_songs = glob.glob("*.mp3")
+list_of_songs = sorted(glob.glob("*.mp3"))
 for mp3_file in list_of_songs:
 
     m, s = divmod(start_time, 60)
