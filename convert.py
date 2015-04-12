@@ -21,17 +21,6 @@ from pydub import AudioSegment
 #         self.location = location
 #         self.file = file
 
-
-##############
-# This all works:
-
-# mvid = MusicVid("TestTitle", "This is a test", "Music", "", "unlisted", "=", 'output.mp4')
-# home = os.path.expanduser("~")
-# client_secrets = os.path.join(home, '.client_secrets.json')
-# credentials = os.path.join(home, ".youtube-upload-credentials.json")
-# youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
-# ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
-
 ##############
 
 # This all works:
@@ -39,11 +28,31 @@ from pydub import AudioSegment
 # # Set location of ffmpeg
 # AudioSegment.ffmpeg = "/usr/local/bin/ffmpeg"
 #
+# Prepare the video info
+video_title = ""
+video_description = ""
+start_time = 0
+
 # # Search for all mp3 files in directory
 list_of_songs = glob.glob("*.mp3")
 for mp3_file in list_of_songs:
+
+    m, s = divmod(start_time, 60)
+    h, m = divmod(m, 60)
+    time = "%d:%02d:%02d" % (h, m, s)
+
+    length = MP3(mp3_file).info.length
+
     audio = ID3(mp3_file)
-    print audio['TRCK'].text[0] + " - " + audio['TIT2'].text[0]
+    video_title = audio['TPE1'].text[0] + " - " + audio['TALB'].text[0]
+    track_info = audio['TRCK'].text[0] + " - " + audio['TIT2'].text[0]
+
+    video_description += track_info + " (" + time + ")\n"
+    start_time += length
+
+print video_description
+
+
 
 playlist_songs = [AudioSegment.from_mp3(mp3_file) for mp3_file in list_of_songs]
 #
@@ -76,3 +85,12 @@ playlist_songs = [AudioSegment.from_mp3(mp3_file) for mp3_file in list_of_songs]
 # picture.write_videofile("output.mp4", fps=24, codec='mpeg4')
 #
 #
+##############
+# This all works:
+
+# mvid = MusicVid(video_title, video_description, "Music", "", "unlisted", "=", 'output.mp4')
+# home = os.path.expanduser("~")
+# client_secrets = os.path.join(home, '.client_secrets.json')
+# credentials = os.path.join(home, ".youtube-upload-credentials.json")
+# youtube = youtube_upload.auth.get_resource(client_secrets, credentials)
+# ytup.upload_video(youtube, mvid, "output.mp4", 1, 1)
